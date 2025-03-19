@@ -18,13 +18,41 @@ def _():
     import matplotlib.pyplot as plt
     import seaborn as sns
     import matplotlib.colors as mcolors
-
     return mcolors, np, os, pd, plt, sns
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md("""## Load unit data""")
+    mo.md(r"""## Download data""")
+    return
+
+
+@app.cell
+def _(os):
+    import owncloud
+
+    if not os.path.exists('data'):
+        print('Creating directory for data')
+        os.mkdir('data')
+        os.mkdir('data/ses-715093703')
+        os.mkdir('data/meta_data')
+
+    if not os.path.exists('data/ses-715093703/units.parquet'):
+        print('Downloading data')
+        owncloud.Client.from_public_link('https://uni-bonn.sciebo.de/s/y9FtA26NOUxVeTt').get_file('/', 'data/ses-715093703/units.parquet')
+    else:
+        print('Session units data already downloaded')
+
+    if not os.path.exists('data/meta_data/units.csv'):
+        owncloud.Client.from_public_link('https://uni-bonn.sciebo.de/s/UUpOWgX8Chep9cZ').get_file('/', 'data/meta_data/units.csv')
+    else:
+        print('Units meta data already downloaded')
+    return (owncloud,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""## Load session units data""")
     return
 
 
@@ -50,7 +78,6 @@ def _(mo):
         ## Select brain area
 
         Pick which part of the brain you want to investigate by clicking the dropdown menu below.
-
         """
     )
     return
@@ -185,7 +212,6 @@ def _():
 
 @app.cell
 def _(data_dir, os, pd):
-
     _filename = 'running.parquet'
     _loadpath = os.path.join(data_dir, _filename)
     running_ses = pd.read_parquet(_loadpath)

@@ -1,0 +1,14 @@
+name: marimo_env
+channels:
+  - defaults
+  - pip:
+      - docutils>=0.21
+      - duckdb>=1.2
+      - marimo>=0.11
+      - markdown>=3.7
+      - numpy>=2.2
+      - pandas>=2.2
+      - parso>=0.8
+      - plotly>=6.0
+      - polars>=1.25
+      - seaborn>=0.13

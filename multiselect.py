@@ -4,6 +4,16 @@ __generated_with = "0.11.21"
 app = marimo.App(width="medium")
 
 
+app._unparsable_cell(
+    r"""
+    # Introduction
+
+    This notebook can be used to explore data from experiments where 
+    """,
+    name="_"
+)
+
+
 @app.cell
 def _():
     import marimo as mo
@@ -27,7 +37,7 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(os):
     import owncloud
 
@@ -52,7 +62,13 @@ def _(os):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md("""## Load session units data""")
+    mo.md(
+        """
+        ## Load session units data
+
+        Run the cell below to load the data from all neurons that were recorded and identified in the experiment.
+        """
+    )
     return
 
 
@@ -71,13 +87,44 @@ def _(units_ses):
     return
 
 
+@app.cell
+def _():
+    structure_full_names = {'APN': 'Anterior Pretectal Nucleus',
+                           'DG': 'Dentate Gyrus', 
+                           'CA1': 'Hippocampus Cornus Ammonis-1 (CA1)',
+                           'VISam': 'Visual Cortex Anteromedial Area',
+                           'grey': 'Grey Matter',
+                           'VISpm': 'Visual Cortex Posteromedial Area',
+                           'PO': 'Dentate Gyrus Polymorph layer',
+                           'LP': 'Lateral Posterior (LP) Nucleus of Thalamus',
+                           'PoT': 'Posterior Triangular Nucleus of Thalamus',
+                           'VISp': 'Primary Visual Cortex (V1)',
+                           'LGd': 'Dorsal Lateral Geniculate Nucleus (LGd) of Thalamus',
+                           'CA3': 'Hippocampus Cornus Ammonis-3 (CA3)',
+                           'VISl': 'Visual Cortex Lateromedial Area',
+                           'VISrl': 'Visual Cortex Rostrolateral Area'}
+    structure_full_names
+    return (structure_full_names,)
+
+
+@app.cell
+def _(structure_full_names, units_ses):
+    units_ses['structure_full_name'] = units_ses['structure_acronym'].map(structure_full_names)
+    return
+
+
+@app.cell
+def _():
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
         ## Select brain area
 
-        Pick which part of the brain you want to investigate by clicking the dropdown menu below.
+        In the dropdown menu below, you can pick which part of the brain you want to investigate.
         """
     )
     return
@@ -85,7 +132,7 @@ def _(mo):
 
 @app.cell
 def _(mo, units_ses):
-    multiselect_structure = mo.ui.multiselect.from_series(units_ses['structure_acronym'])
+    multiselect_structure = mo.ui.multiselect.from_series(units_ses['structure_full_name'])
     multiselect_structure
     return (multiselect_structure,)
 
@@ -100,31 +147,31 @@ def _(mo):
 def _(multiselect_structure, pd, plt, sns, units_ses):
     names_selected_structures = []
 
-    for structure_acronym in multiselect_structure.value:
-        nunits_structure = (units_ses['structure_acronym'] == structure_acronym).sum()
-        names_selected_structures.extend([structure_acronym]*nunits_structure)
+    for structure_full_name in multiselect_structure.value:
+        nunits_structure = (units_ses['structure_full_name'] == structure_full_name).sum()
+        names_selected_structures.extend([structure_full_name]*nunits_structure)
 
     for istructure, structure_name in enumerate(multiselect_structure.value):
 
         if istructure == 0:
             print(istructure, structure_name)
-            firing_rate_structures = units_ses[units_ses.structure_acronym == structure_name]['firing_rate']
+            firing_rate_structures = units_ses[units_ses.structure_full_name == structure_name]['firing_rate']
         else:
             print(istructure, structure_name)
             firing_rate_structures = pd.concat([firing_rate_structures, 
-                                                units_ses[units_ses.structure_acronym == structure_name]['firing_rate']])
+                                                units_ses[units_ses.structure_full_name == structure_name]['firing_rate']])
 
     firing_rate_structures = firing_rate_structures.to_frame()
-    firing_rate_structures['structure_acronym'] = names_selected_structures
+    firing_rate_structures['structure_full_name'] = names_selected_structures
 
-    sns.histplot(firing_rate_structures, x= 'firing_rate', hue = 'structure_acronym', kde=True)
+    sns.histplot(firing_rate_structures, x= 'firing_rate', hue = 'structure_full_name', kde=True)
     plt.title('Average firing rate across different areas')
     return (
         firing_rate_structures,
         istructure,
         names_selected_structures,
         nunits_structure,
-        structure_acronym,
+        structure_full_name,
         structure_name,
     )
 
@@ -144,7 +191,7 @@ def _(mcolors, multiselect_structure, np, plt, units_ses):
     n_units_allstructs = 0
     for _istructure, _structure_name in enumerate(multiselect_structure.value):
 
-        timestamps_structure = units_ses[units_ses.structure_acronym == _structure_name]['spike_times']
+        timestamps_structure = units_ses[units_ses.structure_full_name == _structure_name]['spike_times']
 
         unit_nrs_timestamps = []
         timestamps_structure_flat = []

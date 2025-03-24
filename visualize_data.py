@@ -66,7 +66,7 @@ def _(mo):
         """
         ## Load session units data
 
-        Run the cell below to load the data from all neurons that were recorded and identified in the experiment.
+        Run the cell below to load the data from all neurons (units) that were recorded and identified in the experiment.
         """
     )
     return
@@ -81,14 +81,14 @@ def _(os, pd):
     return data_dir, filename_units_ses, loadpath_ses, units_ses
 
 
-@app.cell
-def _(units_ses):
-    units_ses.columns
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""Adding column with the full names of each structure to the DataFrame.""")
     return
 
 
 @app.cell
-def _():
+def _(units_ses):
     structure_full_names = {'APN': 'Anterior Pretectal Nucleus',
                            'DG': 'Dentate Gyrus', 
                            'CA1': 'Hippocampus Cornus Ammonis-1 (CA1)',
@@ -103,19 +103,9 @@ def _():
                            'CA3': 'Hippocampus Cornus Ammonis-3 (CA3)',
                            'VISl': 'Visual Cortex Lateromedial Area',
                            'VISrl': 'Visual Cortex Rostrolateral Area'}
-    structure_full_names
-    return (structure_full_names,)
 
-
-@app.cell
-def _(structure_full_names, units_ses):
     units_ses['structure_full_name'] = units_ses['structure_acronym'].map(structure_full_names)
-    return
-
-
-@app.cell
-def _():
-    return
+    return (structure_full_names,)
 
 
 @app.cell(hide_code=True)
@@ -154,10 +144,8 @@ def _(multiselect_structure, pd, plt, sns, units_ses):
     for istructure, structure_name in enumerate(multiselect_structure.value):
 
         if istructure == 0:
-            print(istructure, structure_name)
             firing_rate_structures = units_ses[units_ses.structure_full_name == structure_name]['firing_rate']
         else:
-            print(istructure, structure_name)
             firing_rate_structures = pd.concat([firing_rate_structures, 
                                                 units_ses[units_ses.structure_full_name == structure_name]['firing_rate']])
 
@@ -166,6 +154,7 @@ def _(multiselect_structure, pd, plt, sns, units_ses):
 
     sns.histplot(firing_rate_structures, x= 'firing_rate', hue = 'structure_full_name', kde=True)
     plt.title('Average firing rate across different areas')
+    plt.xlabel('Firing rate (Hz)')
     return (
         firing_rate_structures,
         istructure,
@@ -178,7 +167,13 @@ def _(multiselect_structure, pd, plt, sns, units_ses):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""### Make raster plots of spikes in selected areas""")
+    mo.md(
+        r"""
+        ### Make raster plots of spikes in selected areas
+
+        Each tiny bar in this plot marks a neuron firing an action potential, or a spike, as it is also called. Here, you can compare the spiking activity of neurons recorded in different parts of the brain. 
+        """
+    )
     return
 
 
@@ -242,7 +237,13 @@ def _():
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""#### Explore spike data""")
+    mo.md(
+        r"""
+        ## Explore spike data
+
+
+        """
+    )
     return
 
 
@@ -266,8 +267,8 @@ def _(data_dir, os, pd):
 
 
 @app.cell
-def _(running_ses):
-    running_ses
+def _(mo, running_ses):
+    mo.ui.data_explorer(running_ses)
     return
 
 

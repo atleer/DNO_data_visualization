@@ -1,4 +1,4 @@
-# Allen Visual Coding Dataset Visualization with Marimo
+# Neuropixels Dataset Visualization with Marimo
 This repository contains a ``marimo`` notebook with interactive visualizations of spike data in the Allen Visual Coding electrophysiological dataset[<sup>1</sup>](#fn1). 
 
 ## Installation
@@ -37,10 +37,6 @@ marimo run your_notebook_name.py
 marimo convert your_notebook.ipynb -o your_notebook.py
 ```
 
-- When you have opened a ``marimo`` notebook in editable mode, the code in the cells can be hidden with the shortcut:
-
-```
-ctrl + h
-```
+- When you have opened a ``marimo`` notebook in editable mode, the code in the cells can be hidden with the shortcut ``ctrl + h``
 
 <span id="fn1"><sup>1</sup>Siegle, J. H., Jia, X., Durand, S., Gale, S., Bennett, C., Graddis, N., ... & Koch, C. (2021). Survey of spiking in the mouse visual system reveals functional hierarchy. Nature, 592(7852), 86-92. doi: https://doi.org/10.1038/s41586-020-03171-x</span>

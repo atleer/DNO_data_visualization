@@ -23,9 +23,6 @@ def _(mo):
         <span id="fn1"><sup>1</sup>Fig. A from: Jun, James J., et al. "Fully integrated silicon probes for high-density recording of neural activity." Nature 551.7679 (2017): 232-236. doi: https://doi.org/10.1038/nature24636 </span>
 
         <span id="fn1"><sup>2</sup>Fig. B from: Siegle, Joshua H., et al. "Survey of spiking in the mouse visual system reveals functional hierarchy." Nature 592.7852 (2021): 86-92. doi: https://doi.org/10.1038/s41586-020-03171-x</span>
-
-
-
         """
     )
     return
@@ -74,13 +71,16 @@ def _(os):
         os.mkdir('data/meta_data')
 
     if not os.path.exists('data/ses-715093703/units.parquet'):
-        print('Downloading data')
+        print('Downloading units data')
         owncloud.Client.from_public_link('https://uni-bonn.sciebo.de/s/y9FtA26NOUxVeTt').get_file('/', 'data/ses-715093703/units.parquet')
+        print('Downloading units data finished')
     else:
         print('Session units data already downloaded')
 
     if not os.path.exists('data/meta_data/units.csv'):
+        print('Downloading meta data')
         owncloud.Client.from_public_link('https://uni-bonn.sciebo.de/s/UUpOWgX8Chep9cZ').get_file('/', 'data/meta_data/units.csv')
+        print('Downloading meta data finished')
     else:
         print('Units meta data already downloaded')
     return (owncloud,)
@@ -317,7 +317,6 @@ def _(mo):
 
 @app.cell
 def _(data_dir, mo, os, pd):
-
     # load stimulus data
     _filename = 'stimuli.parquet'
     _loadpath = os.path.join(data_dir, _filename)

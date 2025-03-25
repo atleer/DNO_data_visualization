@@ -11,5 +11,6 @@ channels:
       - parso>=0.8
       - plotly>=6.0
       - polars>=1.25
+      - pyarrow>=17.0.0
       - pyocclient=0.6
       - seaborn>=0.13

@@ -1,5 +1,5 @@
 # Neuropixels Dataset Visualization with Marimo
-This repository contains a ``marimo`` notebook with interactive visualizations of spike data in the Allen Visual Coding electrophysiological dataset[<sup>1</sup>](#fn1). 
+This repository contains a ``marimo`` notebook with interactive visualizations of spike data in the Allen Visual Coding electrophysiological dataset.[<sup>1</sup>](#fn1) 
 
 ## Installation
 

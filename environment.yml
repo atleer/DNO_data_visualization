@@ -1,4 +1,4 @@
-name: marimo_env
+name: marimo_env_check
 channels:
   - conda-forge
   - defaults

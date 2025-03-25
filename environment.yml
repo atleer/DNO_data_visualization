@@ -1,6 +1,10 @@
 name: marimo_env
 channels:
+  - conda-forge
   - defaults
+dependencies:
+  - pip
+  - python>=3.10
   - pip:
       - docutils>=0.21
       - duckdb>=1.2
@@ -12,5 +16,5 @@ channels:
       - plotly>=6.0
       - polars>=1.25
       - pyarrow>=17.0.0
-      - pyocclient=0.6
+      - pyocclient>=0.6
       - seaborn>=0.13
